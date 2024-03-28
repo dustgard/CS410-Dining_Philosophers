@@ -15,7 +15,7 @@
     <target name="jar" depends="init,compile">
         <jar destfile="${dist}/${ant.project.name}.jar" basedir="dist/classes">
             <manifest>
-                <attribute name="Main-Class" value="${ant.project.name}"/>
+                <attribute name="Main-Class" value="DiningTable"/>
             </manifest>
         </jar>
     </target>
