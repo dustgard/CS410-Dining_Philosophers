@@ -4,16 +4,15 @@ import java.time.LocalTime;
  * Serves as the controller class for the DiningPhilosophers program. A dining table stores each of the philosophers and
  * their designated chopsticks, starts/stops the eating/thinking process, and displays the stats after the program has
  * finished.
- *
+ * <p>
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class DiningTable {
 
     private final int NUM_PHILOSOPHERS = 5;
     private final int NUM_CHOPSTICKS = NUM_PHILOSOPHERS;
-    private final int SECONDS_TO_EAT = 3;
-
     private final ChopStick[] chopsticksList = new ChopStick[NUM_CHOPSTICKS];
+    private final int SECONDS_TO_EAT = 3;
     private final Philosopher[] philosophersList = new Philosopher[NUM_PHILOSOPHERS];
     private final LocalTime stoppingTime = LocalTime.now().plusSeconds(SECONDS_TO_EAT);
     private boolean running = false;
@@ -25,6 +24,12 @@ public class DiningTable {
         createPhilosophers();
     }
 
+    public static void main(String[] args) {
+        DiningTable table = new DiningTable();
+        table.eat();
+        table.displayStats();
+    }
+
     /**
      * Creates the specified number of philosophers to eat/think at the table. Each of these philosophers, stored in an
      * array, runs on a separate thread.
@@ -34,7 +39,6 @@ public class DiningTable {
         for (int i = 0; i < NUM_CHOPSTICKS; i++) {
             chopsticksList[i] = new ChopStick();
         }
-
         // Create philosophers and assign chopsticks to their left and right-hand sides
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             philosophersList[i] = new Philosopher(String.valueOf(i));
@@ -54,7 +58,6 @@ public class DiningTable {
      */
     public void eat() {
         startEating();
-
         // Run the program until the specified amount of time has passed
         while (running) {
             if (LocalTime.now().isAfter(stoppingTime)) {
@@ -75,7 +78,6 @@ public class DiningTable {
      */
     public void stopEating() {
         running = false;
-
         try {
             // Stop the philosophers from eating/thinking after the designated time period
             for (Philosopher p : philosophersList) {
@@ -91,12 +93,5 @@ public class DiningTable {
 
     public void displayStats() {
         System.out.println("Displaying Stats");
-    }
-
-    public static void main(String[] args) {
-        DiningTable table = new DiningTable();
-
-        table.eat();
-        table.displayStats();
     }
 }

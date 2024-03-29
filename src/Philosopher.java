@@ -5,8 +5,7 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
 
-    public Philosopher(){
-
+    public Philosopher() {
     }
 
     public Philosopher(String name) {
@@ -19,10 +18,10 @@ public class Philosopher implements Runnable {
      * Assigns which chopstick objects are at the philosopher's left and right-hand sides. Both of these chopsticks must
      * be acquired for a philosopher to eat.
      *
-     * @param chopStickRight  ChopStick object placed on the philosopher's right-hand side
+     * @param chopStickRight ChopStick object placed on the philosopher's right-hand side
      * @param chopStickLeft  ChopStick object placed on the philosopher's right-hand side
      */
-    public void assignChopSticks(ChopStick chopStickRight, ChopStick chopStickLeft){
+    public void assignChopSticks(ChopStick chopStickRight, ChopStick chopStickLeft) {
         this.chopStickLeft = chopStickLeft;
         this.chopStickRight = chopStickRight;
     }
@@ -31,7 +30,7 @@ public class Philosopher implements Runnable {
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-    public synchronized void grabChopSticks(){
+    public synchronized void grabChopSticks() {
         while (!chopStickRight.isAvailable() || !chopStickRight.isAvailable()) {
             try {
                 wait();
@@ -47,7 +46,7 @@ public class Philosopher implements Runnable {
     /**
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
-    public void eatRice(){
+    public void eatRice() {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -55,7 +54,8 @@ public class Philosopher implements Runnable {
         }
     }
 
-    public void think() {}
+    public void think() {
+    }
 
     public void stopRunning() {
         running = false;
