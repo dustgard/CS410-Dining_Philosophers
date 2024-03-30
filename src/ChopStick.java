@@ -6,7 +6,7 @@ public class ChopStick {
     }
 
     public synchronized void acquire() {
-        // If another thread has the lock acquired, then wait until released
+        // If another thread has the lock acquired, then wait until released.
         while (lock) {
             try {
                 this.wait();
