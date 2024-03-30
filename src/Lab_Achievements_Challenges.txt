@@ -1,0 +1,21 @@
+Dining Philosopher Group Project
+
+Achieved Checklist:
+- Requirements
+
+1. The solution must	be uploaded	to GitHub and the location of	the
+        repository	emailed	to the professor.
+
+2. Each student will grade both themselves and their partners.
+
+3. The presentation should include an	explanation	of the group’s
+        solution and how it	solves the problem.
+
+4. The presentation should be 10-20 minutes long, and each student
+        must speak during the presentation to describe some	part of	the
+        problem	and/or group’s solution.
+
+
+
+Challenges:
+
