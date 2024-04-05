@@ -1,7 +1,6 @@
 public class Philosopher implements Runnable {
-
-    public static final long THINKING_TIME = 5 * 1000;
-    public static final long EATING_TIME = 5 * 1000;
+    public static final long THINKING_TIME = 50;
+    public static final long EATING_TIME = 50;
     private String name;
     private Thread thread;
     private volatile boolean running = true;
@@ -42,7 +41,7 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public synchronized void grabChopSticks() {
-        while (!chopStickRight.isAvailable() || !chopStickRight.isAvailable()) {
+        while (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -58,22 +57,37 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
+        System.out.printf("Philosopher %s eating rice\n", name);
         delay(EATING_TIME, "Thread got interrupted while sleeping");
+        chopStickRight.release();
+        chopStickLeft.release();
+        System.out.printf("Philosopher %s finished eating\n", name);
     }
 
     public void think() {
+        System.out.printf("Philosopher %s thinking\n", name);
         delay(THINKING_TIME, "Thinking error");
     }
 
     public void stopRunning() {
         running = false;
+        synchronized (this) {
+            notify();
+        }
     }
 
     @Override
     public void run() {
         while (running) {
-            System.out.println("Running thread" + thread);
+            System.out.println("Running");
+            think();
+            System.out.printf("Philosopher %s done thinking", name);
+            grabChopSticks();
+            System.out.printf("Philosopher %s picked up chopsticks", name);
+            eatRice();
+            System.out.printf("Philosopher %s done eating", name);
         }
+        System.out.printf("Philosopher %s stopped", name);
     }
 
     /**

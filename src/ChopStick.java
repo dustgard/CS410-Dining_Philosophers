@@ -4,15 +4,20 @@
  * a simple mutex, ensures that there is only one thread at a time that can access the methods.
  * Author: Ryan Johnson, Dustin Gardner
  */
-
 public class ChopStick {
     private boolean lock;
+    private int name;
     private int chopStickPickUpCount = 0;
 
     /**
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
      */
     public ChopStick() {
+        lock = false;
+    }
+
+    public ChopStick(int name) {
+        this.name = name;
         lock = false;
     }
 
@@ -24,7 +29,7 @@ public class ChopStick {
     public synchronized void acquire() {
         while (lock) {
             try {
-                this.wait();
+                wait();
             } catch (InterruptedException ignored) {
             }
         }
@@ -41,7 +46,8 @@ public class ChopStick {
      */
     public synchronized void release() {
         lock = false;
-        this.notifyAll();
+        System.out.printf("Chopstick %d released\n", name);
+        notifyAll();
     }
 
     /**
@@ -60,10 +66,6 @@ public class ChopStick {
      * a Philosopher or on the table.
      */
     public synchronized boolean isAvailable() {
-        if (!lock) {
-            return true;
-        } else {
-            return false;
-        }
+        return !lock;
     }
 }

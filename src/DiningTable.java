@@ -37,11 +37,12 @@ public class DiningTable {
     public void createPhilosophers() {
         // Create chopsticks
         for (int i = 0; i < NUM_CHOPSTICKS; i++) {
-            chopsticksList[i] = new ChopStick();
+            chopsticksList[i] = new ChopStick(i);
         }
         // Create philosophers and assign chopsticks to their left and right-hand sides
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             philosophersList[i] = new Philosopher(String.valueOf(i));
+            System.out.printf("Created Philosopher %d\n", i);
             if (i == (NUM_PHILOSOPHERS - 1)) {
                 // For the philosopher left of the starting philosopher (the final philosopher), it's right chopstick
                 // should be the same chopstick as the first philosopher's left chopstick
@@ -61,6 +62,7 @@ public class DiningTable {
         // Run the program until the specified amount of time has passed
         while (running) {
             if (LocalTime.now().isAfter(stoppingTime)) {
+                System.out.println("EatTimeEnded");
                 stopEating();
             }
         }
@@ -81,6 +83,7 @@ public class DiningTable {
         try {
             // Stop the philosophers from eating/thinking after the designated time period
             for (Philosopher p : philosophersList) {
+                System.out.println("Stopping thread");
                 p.stopRunning();
             }
             for (Philosopher p : philosophersList) {
