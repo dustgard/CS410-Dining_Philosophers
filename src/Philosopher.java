@@ -41,7 +41,7 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public synchronized void grabChopSticks() {
-        while (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()) {
+        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -57,29 +57,25 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
-        System.out.printf("Philosopher %s eating rice\n", name);
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
-        System.out.printf("Philosopher %s finished eating\n", name);
     }
 
     public void think() {
-        System.out.printf("Philosopher %s thinking\n", name);
         delay(THINKING_TIME, "Thinking error");
     }
 
     public void stopRunning() {
         running = false;
         synchronized (this) {
-            notify();
+            notifyAll();
         }
     }
 
     @Override
     public void run() {
         while (running) {
-            System.out.println("Running");
             think();
             System.out.printf("Philosopher %s done thinking", name);
             grabChopSticks();
