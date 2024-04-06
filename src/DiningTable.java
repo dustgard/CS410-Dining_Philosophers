@@ -12,7 +12,7 @@ public class DiningTable {
     private final int NUM_PHILOSOPHERS = 5;
     private final int NUM_CHOPSTICKS = NUM_PHILOSOPHERS;
     private final ChopStick[] chopsticksList = new ChopStick[NUM_CHOPSTICKS];
-    private final int SECONDS_TO_EAT = 3;
+    private final int SECONDS_TO_EAT = 5;
     private final Philosopher[] philosophersList = new Philosopher[NUM_PHILOSOPHERS];
     private final LocalTime stoppingTime = LocalTime.now().plusSeconds(SECONDS_TO_EAT);
     private boolean running = false;
@@ -42,12 +42,16 @@ public class DiningTable {
         // Create philosophers and assign chopsticks to their left and right-hand sides
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             philosophersList[i] = new Philosopher(String.valueOf(i));
-            if (i == (NUM_PHILOSOPHERS - 1)) {
+            if (i == (0)) {
                 // For the philosopher left of the starting philosopher (the final philosopher), it's right chopstick
                 // should be the same chopstick as the first philosopher's left chopstick
-                philosophersList[i].assignChopSticks(chopsticksList[0], chopsticksList[i]);
-            } else {
-                philosophersList[i].assignChopSticks(chopsticksList[i + 1], chopsticksList[i]);
+                philosophersList[i].assignChopSticks(chopsticksList[chopsticksList.length-1], chopsticksList[i]);
+            }
+            else if (i == (philosophersList.length - 1)) {
+                philosophersList[i].assignChopSticks(chopsticksList[i-1], chopsticksList[chopsticksList.length - 1]);
+            }
+            else {
+                philosophersList[i].assignChopSticks(chopsticksList[i-1], chopsticksList[i]);
             }
         }
     }
@@ -92,6 +96,18 @@ public class DiningTable {
     }
 
     public void displayStats() {
-        System.out.println("Displaying Stats");
+        System.out.println("---------------------------------------------------");
+        System.out.println("Displaying Stats: ");
+        System.out.println("---------------------------------------------------");
+        System.out.println("Philosophers");
+        for (Philosopher p : philosophersList) {
+            System.out.println("Philosopher " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
+        }
+        System.out.println("----------------------------------------------------");
+        System.out.println("ChopSticks");
+        for (ChopStick c : chopsticksList) {
+            System.out.println("Chopstick " + c.getName() + " was picked up " + c.getChopStickPickUpCount() + " times");
+        }
+        System.out.println("---------------------------------------------------");
     }
 }

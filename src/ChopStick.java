@@ -5,7 +5,7 @@
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class ChopStick {
-    private boolean lock;
+    private boolean unlock;
     private int name;
     private int chopStickPickUpCount = 0;
 
@@ -13,12 +13,12 @@ public class ChopStick {
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
      */
     public ChopStick() {
-        lock = false;
+        unlock = true;
     }
 
     public ChopStick(int name) {
         this.name = name;
-        lock = false;
+        unlock = true;
     }
 
     /**
@@ -27,14 +27,15 @@ public class ChopStick {
      * by a Philosopher until released.
      */
     public synchronized void acquire() {
-        while (lock) {
+        while (!unlock) {
             try {
                 wait();
             } catch (InterruptedException ignored) {
             }
         }
-        lock = true;
+        unlock = false;
         chopStickPickUpCount++;
+        System.out.println("Philosopher " + Thread.currentThread().getName() + " picked up chopstick " + name);
     }
 
     /**
@@ -45,8 +46,8 @@ public class ChopStick {
      * acquire the ChopStick in an attempt to eat with it.
      */
     public synchronized void release() {
-        lock = false;
-        System.out.printf("Chopstick %d released\n", name);
+        unlock = true;
+        System.out.println("Philosopher " + Thread.currentThread().getName() + " released chopstick " + name);
         notifyAll();
     }
 
@@ -60,12 +61,16 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
+    public int getName() {
+        return name;
+    }
+
     /**
      * This method is thread safe and is used to check the status of the ChopStick.
      * @return true or false depending on if the lock is true or false and simulates if the ChopStick is held by
      * a Philosopher or on the table.
      */
     public synchronized boolean isAvailable() {
-        return !lock;
+        return unlock;
     }
 }
