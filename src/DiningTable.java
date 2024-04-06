@@ -1,4 +1,7 @@
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 /**
  * Serves as the controller class for the DiningPhilosophers program. A dining table stores each of the philosophers and
@@ -11,7 +14,8 @@ public class DiningTable {
 
     private final int NUM_PHILOSOPHERS = 5;
     private final int NUM_CHOPSTICKS = NUM_PHILOSOPHERS;
-    private final ChopStick[] chopsticksList = new ChopStick[NUM_CHOPSTICKS];
+    private final Semaphore[] chopsticksList = new Semaphore[NUM_CHOPSTICKS];
+    private final Map<Integer, Semaphore> chopStickMap = new HashMap<>();
     private final int SECONDS_TO_EAT = 5;
     private final Philosopher[] philosophersList = new Philosopher[NUM_PHILOSOPHERS];
     private final LocalTime stoppingTime = LocalTime.now().plusSeconds(SECONDS_TO_EAT);
@@ -37,7 +41,8 @@ public class DiningTable {
     public void createPhilosophers() {
         // Create chopsticks
         for (int i = 0; i < NUM_CHOPSTICKS; i++) {
-            chopsticksList[i] = new ChopStick(i);
+            Semaphore sem = new Semaphore(1);
+            chopStickMap.put(i, sem);
         }
         // Create philosophers and assign chopsticks to their left and right-hand sides
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
@@ -45,13 +50,13 @@ public class DiningTable {
             if (i == (0)) {
                 // For the philosopher left of the starting philosopher (the final philosopher), it's right chopstick
                 // should be the same chopstick as the first philosopher's left chopstick
-                philosophersList[i].assignChopSticks(chopsticksList[chopsticksList.length-1], chopsticksList[i]);
+                philosophersList[i].assignChopSticks(chopStickMap.get(chopStickMap.size()-1), chopStickMap.size()-1 , chopStickMap.get(i), i);
             }
             else if (i == (philosophersList.length - 1)) {
-                philosophersList[i].assignChopSticks(chopsticksList[i-1], chopsticksList[chopsticksList.length - 1]);
+                philosophersList[i].assignChopSticks(chopStickMap.get(i-1), i-1, chopStickMap.get(chopsticksList.length - 1), chopsticksList.length - 1);
             }
             else {
-                philosophersList[i].assignChopSticks(chopsticksList[i-1], chopsticksList[i]);
+                philosophersList[i].assignChopSticks(chopStickMap.get(i-1), i-1, chopStickMap.get(i), i);
             }
         }
     }
@@ -99,15 +104,15 @@ public class DiningTable {
         System.out.println("---------------------------------------------------");
         System.out.println("Displaying Stats: ");
         System.out.println("---------------------------------------------------");
-        System.out.println("Philosophers");
         for (Philosopher p : philosophersList) {
-            System.out.println("Philosopher " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
+            System.out.println("Philosopher: " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
+            System.out.println("");
+            System.out.println("He used the ChopSticks: ");
+            System.out.println("");
+            System.out.println("Right " + p.getChopStickRightNum() + " was picked up " + p.getChopStickRightCount() + " times");
+            System.out.println("Left " + p.getChopStickLeftNum() + " was picked up " + p.getChopStickLeftCount() + " times");
+            System.out.println("");
+            System.out.println("----------------------------------------------------");
         }
-        System.out.println("----------------------------------------------------");
-        System.out.println("ChopSticks");
-        for (ChopStick c : chopsticksList) {
-            System.out.println("Chopstick " + c.getName() + " was picked up " + c.getChopStickPickUpCount() + " times");
-        }
-        System.out.println("---------------------------------------------------");
     }
 }
