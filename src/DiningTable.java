@@ -104,15 +104,65 @@ public class DiningTable {
         System.out.println("---------------------------------------------------");
         System.out.println("Displaying Stats: ");
         System.out.println("---------------------------------------------------");
+        int totalPickup0 = 0;
+        int totalPickup1 = 0;
+        int totalPickup2 = 0;
+        int totalPickup3 = 0;
+        int totalPickup4 = 0;
+
         for (Philosopher p : philosophersList) {
             System.out.println("Philosopher: " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
             System.out.println("");
             System.out.println("He used the ChopSticks: ");
             System.out.println("");
-            System.out.println("Right " + p.getChopStickRightNum() + " was picked up " + p.getChopStickRightCount() + " times");
-            System.out.println("Left " + p.getChopStickLeftNum() + " was picked up " + p.getChopStickLeftCount() + " times");
+            System.out.println("Right chopstick number " + p.getChopStickRightNum());
+            System.out.println("Left chopstick number " + p.getChopStickLeftNum());
             System.out.println("");
             System.out.println("----------------------------------------------------");
+            int chopRightNumber = p.getChopStickRightNum();
+            switch(chopRightNumber){
+                case 0:
+                    totalPickup0+= p.getChopStickRightCount();
+                    break;
+                case 1:
+                    totalPickup1+= p.getChopStickRightCount();
+                    break;
+                case 2:
+                    totalPickup2+= p.getChopStickRightCount();
+                    break;
+                case 3:
+                    totalPickup3+= p.getChopStickRightCount();
+                    break;
+                case 4:
+                    totalPickup4+= p.getChopStickRightCount();
+                    break;
+            }
+            int chopLeftNumber = p.getChopStickLeftNum();
+            switch(chopLeftNumber){
+                case 0:
+                    totalPickup0+= p.getChopStickLeftCount();
+                    break;
+                case 1:
+                    totalPickup1+= p.getChopStickLeftCount();
+                    break;
+                case 2:
+                    totalPickup2+= p.getChopStickLeftCount();
+                    break;
+                case 3:
+                    totalPickup3+= p.getChopStickLeftCount();
+                    break;
+                case 4:
+                    totalPickup4+= p.getChopStickLeftCount();
+                    break;
+            }
         }
+        System.out.println("---------------------------------------------------");
+        System.out.println("Displaying Chopstick Stats: ");
+        System.out.println("Chopstick 0 was picked up " + totalPickup0 + " times" );
+        System.out.println("Chopstick 1 was picked up " + totalPickup1 + " times" );
+        System.out.println("Chopstick 2 was picked up " + totalPickup2 + " times" );
+        System.out.println("Chopstick 3 was picked up " + totalPickup3 + " times" );
+        System.out.println("Chopstick 4 was picked up " + totalPickup4 + " times" );
+        System.out.println("---------------------------------------------------");
     }
 }
