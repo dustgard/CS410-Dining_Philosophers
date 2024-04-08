@@ -1,3 +1,5 @@
+import java.util.concurrent.Semaphore;
+
 /**
  * ChopStick mutex class for the Philosophers class which are acquired in a set before use.
  * The chopsticks are used to simulated eating utensils for each of the philosophers.The class, which is based off of
@@ -5,20 +7,17 @@
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class ChopStick {
-    private boolean unlock;
     private int name;
     private int chopStickPickUpCount = 0;
+    private Semaphore chopStick;
 
     /**
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
      */
-    public ChopStick() {
-        unlock = true;
-    }
 
     public ChopStick(int name) {
         this.name = name;
-        unlock = true;
+        this.chopStick = new Semaphore(1);
     }
 
     /**
@@ -26,14 +25,8 @@ public class ChopStick {
      * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
      * by a Philosopher until released.
      */
-    public synchronized void acquire() {
-        while (!unlock) {
-            try {
-                wait();
-            } catch (InterruptedException ignored) {
-            }
-        }
-        unlock = false;
+    public void acquire() throws InterruptedException {
+        chopStick.acquire();
         chopStickPickUpCount++;
         System.out.println("Philosopher " + Thread.currentThread().getName() + " picked up chopstick " + name);
     }
@@ -45,20 +38,30 @@ public class ChopStick {
      * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
      * acquire the ChopStick in an attempt to eat with it.
      */
-    public synchronized void release() {
-        unlock = true;
-        System.out.println("Philosopher " + Thread.currentThread().getName() + " released chopstick " + name);
-        notifyAll();
+    public void release() {
+        if(chopStick.availablePermits()<1) {
+            System.out.println("Philosopher " + Thread.currentThread().getName() + " released chopstick " + name);
+            chopStick.release();
+        }
     }
 
     /**
      * The method is used to keep data to supply user with statistic on how many times the ChopStick is
      * picked up.
+     *
      * @return and int of how many times the ChopStick is picked up. It is increased everytime regardless if the
      * Philosopher eats or not.
      */
     public int getChopStickPickUpCount() {
         return chopStickPickUpCount;
+    }
+
+    public Semaphore getChopStick() {
+        return chopStick;
+    }
+
+    public boolean pickedUp() {
+        return chopStick.availablePermits() < 1;
     }
 
     public int getName() {
@@ -70,7 +73,4 @@ public class ChopStick {
      * @return true or false depending on if the lock is true or false and simulates if the ChopStick is held by
      * a Philosopher or on the table.
      */
-    public synchronized boolean isAvailable() {
-        return unlock;
-    }
 }

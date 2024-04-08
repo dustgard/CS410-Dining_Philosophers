@@ -1,14 +1,8 @@
-import java.util.concurrent.Semaphore;
-
 public class Philosopher implements Runnable {
     private String name;
     private Thread thread;
     private volatile boolean running = true;
-    private Semaphore chopStickRight, chopStickLeft;
-    private int chopStickRightNum = 0;
-    private int chopStickLeftNum = 0;
-    private int chopStickRightCount = 0;
-    private int chopStickLeftCount = 0;
+    private ChopStick chopStickRight, chopStickLeft;
     private int eatCount = 0;
 
     /**
@@ -31,8 +25,8 @@ public class Philosopher implements Runnable {
      * @param errMsg
      */
     private static void delay(String errMsg) {
-        int max = 100;
-        int min = 40;
+        int max = 500;
+        int min = 400;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -45,29 +39,38 @@ public class Philosopher implements Runnable {
     /**
      * Assigns which chopstick objects are at the philosopher's left and right-hand sides. Both of these chopsticks must
      * be acquired for a philosopher to eat.
+     *
      * @param chopStickRight ChopStick object placed on the philosopher's right-hand side
-     * @param chopStickLeft  ChopStick object placed on the philosopher's right-hand side
+     * @param chopStickLeft  ChopStick object placed on the philosopher's left-hand side
      */
-    public void assignChopSticks(Semaphore chopStickRight,int chopStickRightNum, Semaphore chopStickLeft, int chopStickLeftNum) {
+    public void assignChopSticks(ChopStick chopStickRight, ChopStick chopStickLeft) {
         this.chopStickLeft = chopStickLeft;
         this.chopStickRight = chopStickRight;
-        this.chopStickRightNum = chopStickRightNum;
-        this.chopStickLeftNum = chopStickLeftNum;
     }
 
     /**
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-    public void grabChopSticks() {
-        try {
+    public void grabChopSticks() throws InterruptedException {
+        if (!chopStickRight.pickedUp() && !chopStickLeft.pickedUp()) {
             chopStickRight.acquire();
-            chopStickRightCount++;
-            chopStickLeft.acquire();
-            chopStickLeftCount++;
-        } catch (InterruptedException e) {
+            if (!chopStickLeft.pickedUp()) {
+                chopStickLeft.acquire();
+                System.out.println(Thread.currentThread().getName() + " Success");
+            } else {
+                System.out.println("Possible Deadlock " + Thread.currentThread().getName());
+                chopStickLeft.release();
+                chopStickRight.release();
+                think();
+            }
         }
-
+        else {
+            System.out.println(Thread.currentThread().getName() + " Chopsticks are taken can not eat back to thinking");
+            chopStickRight.release();
+            chopStickLeft.release();
+            think();
+        }
     }
 
     /**
@@ -94,10 +97,6 @@ public class Philosopher implements Runnable {
      */
     public void stopRunning() {
         running = false;
-        synchronized (this) {
-           chopStickRight.release();
-           chopStickLeft.release();
-        }
     }
 
     /**
@@ -107,14 +106,18 @@ public class Philosopher implements Runnable {
     public void run() {
         while (running) {
             think();
-            grabChopSticks();
-            eatRice();
+            try {
+                grabChopSticks();
+            } catch (InterruptedException e) {
+            }
+                eatRice();
         }
         System.out.println("Philosopher " + Thread.currentThread().getName() + " is no longer hungry");
     }
 
     /**
      * Returns the thread on which the philosopher is running.
+     *
      * @return Thread object on which this philosopher running
      */
     public Thread getThread() {
@@ -125,19 +128,15 @@ public class Philosopher implements Runnable {
         return eatCount;
     }
 
-    public int getChopStickRightCount() {
-        return chopStickRightCount;
+    public ChopStick getChopStickRight() {
+        return chopStickRight;
     }
 
-    public int getChopStickLeftCount() {
-        return chopStickLeftCount;
+    public ChopStick getChopStickLeft() {
+        return chopStickLeft;
     }
 
-    public int getChopStickRightNum() {
-        return chopStickRightNum;
-    }
-
-    public int getChopStickLeftNum() {
-        return chopStickLeftNum;
+    public String getName() {
+        return name;
     }
 }
