@@ -1,10 +1,16 @@
 public class Philosopher implements Runnable {
-    public static final long THINKING_TIME = 50;
+    public static final long THINKING_TIME = 300;
     public static final long EATING_TIME = 50;
     private String name;
     private Thread thread;
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
+
+    private int chopStickRightNum = 0;
+    private int chopStickLeftNum = 0;
+    private int chopStickRightCount = 0;
+    private int chopStickLeftCount = 0;
+    private int eatCount = 0;
 
     public Philosopher() {
     }
@@ -50,6 +56,8 @@ public class Philosopher implements Runnable {
         }
         chopStickRight.acquire();
         chopStickLeft.acquire();
+        chopStickRightCount++;
+        chopStickLeftCount++;
         notify();
     }
 
@@ -57,6 +65,7 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
+        eatCount++;
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
@@ -94,4 +103,25 @@ public class Philosopher implements Runnable {
     public Thread getThread() {
         return thread;
     }
+
+    public int getEatCount() {
+        return eatCount;
+    }
+
+    public int getChopStickRightCount() {
+        return chopStickRightCount;
+    }
+
+    public int getChopStickLeftCount() {
+        return chopStickLeftCount;
+    }
+
+    public int getChopStickRightNum() {
+        return chopStickRightNum;
+    }
+
+    public int getChopStickLeftNum() {
+        return chopStickLeftNum;
+    }
+
 }
