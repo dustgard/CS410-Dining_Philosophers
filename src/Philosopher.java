@@ -4,6 +4,7 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
     private int eatCount = 0;
+    private int eatPriority = 5;
 
     /**
      *
@@ -24,9 +25,21 @@ public class Philosopher implements Runnable {
     /**
      * @param errMsg
      */
-    private static void delay(String errMsg) {
-        int max = 500;
-        int min = 400;
+    private static void eatDelay(String errMsg) {
+        int max = 200;
+        int min = 150;
+        int range = max - min + 1;
+        double sleepTime = (Math.random() * range) + min;
+        try {
+            Thread.sleep((long) sleepTime);
+        } catch (InterruptedException e) {
+            System.err.println(errMsg);
+        }
+    }
+
+    private static void thinkDelay(String errMsg) {
+        int max = 100;
+        int min = 50;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -52,25 +65,29 @@ public class Philosopher implements Runnable {
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-    public void grabChopSticks() throws InterruptedException {
-        if (!chopStickRight.pickedUp() && !chopStickLeft.pickedUp()) {
-            chopStickRight.acquire();
-            if (!chopStickLeft.pickedUp()) {
-                chopStickLeft.acquire();
-                System.out.println(Thread.currentThread().getName() + " Success");
-            } else {
-                System.out.println("Possible Deadlock " + Thread.currentThread().getName());
-                chopStickLeft.release();
-                chopStickRight.release();
-                think();
+
+    public synchronized void grabChopSticks() {
+        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
+            try {
+                if(thread.getPriority()<8) {
+                    eatPriority+=5;
+                    thread.setPriority(eatPriority);
+                    System.out.println(thread.getPriority());
+                }
+                System.out.println(thread.getPriority());
+                wait();
+            } catch (InterruptedException e) {
+                System.err.println("Waiting interrupted while waiting for right chop stick to become available");
             }
         }
-        else {
-            System.out.println(Thread.currentThread().getName() + " Chopsticks are taken can not eat back to thinking");
-            chopStickRight.release();
-            chopStickLeft.release();
-            think();
+        chopStickRight.acquire();
+        chopStickLeft.acquire();
+        if(thread.getPriority()>9){
+            eatPriority-=5;
+            thread.setPriority(eatPriority);
+            System.out.println(thread.getPriority());
         }
+        System.out.println(thread.getPriority());
     }
 
     /**
@@ -78,7 +95,7 @@ public class Philosopher implements Runnable {
      */
     public void eatRice() {
         eatCount++;
-        delay("Thread got interrupted while sleeping");
+        eatDelay("Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
         System.out.println("Philosopher " + Thread.currentThread().getName() + " is done eating");
@@ -88,7 +105,7 @@ public class Philosopher implements Runnable {
      *
      */
     public void think() {
-        delay("Thinking error");
+        thinkDelay("Thinking error");
         System.out.println("Philosopher " + Thread.currentThread().getName() + " done thinking");
     }
 
@@ -97,6 +114,9 @@ public class Philosopher implements Runnable {
      */
     public void stopRunning() {
         running = false;
+        synchronized (this) {
+            notify();
+        }
     }
 
     /**
@@ -106,13 +126,13 @@ public class Philosopher implements Runnable {
     public void run() {
         while (running) {
             think();
-            try {
-                grabChopSticks();
-            } catch (InterruptedException e) {
-            }
-                eatRice();
+            System.out.println("Philosopher " + name + " done thinking");
+            grabChopSticks();
+            System.out.println("Philosopher " + name + " picked up chopsticks");
+            eatRice();
+            System.out.println("Philosopher " + name + " done eating");
         }
-        System.out.println("Philosopher " + Thread.currentThread().getName() + " is no longer hungry");
+        System.out.println("Philosopher " + name + " stopped eating");
     }
 
     /**

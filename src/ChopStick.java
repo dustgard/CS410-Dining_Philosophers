@@ -7,17 +7,20 @@ import java.util.concurrent.Semaphore;
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class ChopStick {
+    private boolean lock;
     private int name;
     private int chopStickPickUpCount = 0;
-    private Semaphore chopStick;
 
     /**
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
      */
+    public ChopStick(){
+        lock = false;
+    }
 
     public ChopStick(int name) {
+        lock = false;
         this.name = name;
-        this.chopStick = new Semaphore(1);
     }
 
     /**
@@ -25,11 +28,18 @@ public class ChopStick {
      * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
      * by a Philosopher until released.
      */
-    public void acquire() throws InterruptedException {
-        chopStick.acquire();
+    public synchronized void acquire() {
+        while (lock) {
+            try {
+                wait();
+            } catch (InterruptedException ignored) {
+            }
+        }
+        lock = true;
         chopStickPickUpCount++;
         System.out.println("Philosopher " + Thread.currentThread().getName() + " picked up chopstick " + name);
     }
+
 
     /**
      * The release method is a thread safe method used to change the lock boolean to false,
@@ -38,12 +48,12 @@ public class ChopStick {
      * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
      * acquire the ChopStick in an attempt to eat with it.
      */
-    public void release() {
-        if(chopStick.availablePermits()<1) {
-            System.out.println("Philosopher " + Thread.currentThread().getName() + " released chopstick " + name);
-            chopStick.release();
-        }
+    public synchronized void release() {
+        lock = false;
+        System.out.printf("Chopstick %d released\n", name);
+        notify();
     }
+
 
     /**
      * The method is used to keep data to supply user with statistic on how many times the ChopStick is
@@ -56,16 +66,12 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
-    public Semaphore getChopStick() {
-        return chopStick;
-    }
-
-    public boolean pickedUp() {
-        return chopStick.availablePermits() < 1;
-    }
-
     public int getName() {
         return name;
+    }
+
+    public synchronized boolean isAvailable() {
+        return !lock;
     }
 
     /**
