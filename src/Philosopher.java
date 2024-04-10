@@ -40,23 +40,41 @@ public class Philosopher implements Runnable {
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-    public synchronized void grabChopSticks() {
-        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                System.err.println("Waiting interrupted while waiting for right chop stick to become available");
+//    public synchronized void grabChopSticks() {
+//        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
+//            try {
+//                wait();
+//            } catch (InterruptedException e) {
+//                System.err.println("Waiting interrupted while waiting for right chop stick to become available");
+//            }
+//        }
+//        chopStickRight.acquire();
+//        chopStickLeft.acquire();
+//        notify();
+//    }
+
+    public void grabChopsticks() {
+        if (chopStickLeft.isAvailable()) {
+            chopStickLeft.acquire();
+            if (chopStickRight.isAvailable()) {
+                chopStickRight.acquire();
+            } else {
+                chopStickRight.release();
+                chopStickRight.release();
+                think();
             }
+        } else {
+            chopStickLeft.release();
+            chopStickRight.release();
+            think();
         }
-        chopStickRight.acquire();
-        chopStickLeft.acquire();
-        notify();
     }
 
     /**
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
+        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()))
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
@@ -78,7 +96,7 @@ public class Philosopher implements Runnable {
         while (running) {
             think();
             System.out.printf("Philosopher %s done thinking", name);
-            grabChopSticks();
+            grabChopsticks();
             System.out.printf("Philosopher %s picked up chopsticks", name);
             eatRice();
             System.out.printf("Philosopher %s done eating", name);
