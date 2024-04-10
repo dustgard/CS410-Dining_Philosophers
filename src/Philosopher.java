@@ -115,4 +115,16 @@ public class Philosopher implements Runnable {
     public int getChopStickRightNum() {
         return chopStickRightNum;
     }
+
+    public int getChopStickLeftNum() {
+        return chopStickLeftNum;
+    }
+
+    public int getChopStickRightCount() {
+        return chopStickRightCount;
+    }
+
+    public int getChopStickLeftCount() {
+        return chopStickLeftCount;
+    }
 }
