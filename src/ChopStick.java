@@ -46,7 +46,6 @@ public class ChopStick {
      */
     public synchronized void release() {
         lock = false;
-//        System.out.printf("Chopstick %d released\n", name);
         notifyAll();
     }
 
@@ -60,7 +59,7 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
-    public boolean isLocked() {
+    public boolean isLock() {
         return lock;
     }
 

@@ -47,9 +47,9 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public void grabChopsticks() {
-        if (!chopStickLeft.isLocked()) {
+        if (!chopStickLeft.isLock()) {
             chopStickLeft.acquire();
-            if (!chopStickRight.isLocked()) {
+            if (!chopStickRight.isLock()) {
                 chopStickRight.acquire();
             } else {
                 chopStickRight.release();
@@ -90,13 +90,9 @@ public class Philosopher implements Runnable {
     public void run() {
         while (running) {
             think();
-            System.out.printf("Philosopher %s done thinking", name);
             grabChopsticks();
-            System.out.printf("Philosopher %s picked up chopsticks", name);
             eatRice();
-            System.out.printf("Philosopher %s done eating", name);
         }
-        System.out.printf("Philosopher %s stopped", name);
     }
 
     /**
@@ -110,6 +106,14 @@ public class Philosopher implements Runnable {
 
     public int getEatCount() {
         return eatCount;
+    }
+
+    public ChopStick getChopStickLeft() {
+        return chopStickLeft;
+    }
+
+    public ChopStick getChopStickRight() {
+        return chopStickRight;
     }
 
     public int getChopStickRightNum() {
