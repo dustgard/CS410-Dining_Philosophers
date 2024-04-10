@@ -6,6 +6,12 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
 
+    private int chopStickRightNum = 0;
+    private int chopStickLeftNum = 0;
+    private int chopStickRightCount = 0;
+    private int chopStickLeftCount = 0;
+    private int eatCount = 0;
+
     public Philosopher() {
     }
 
@@ -40,23 +46,10 @@ public class Philosopher implements Runnable {
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-//    public synchronized void grabChopSticks() {
-//        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
-//            try {
-//                wait();
-//            } catch (InterruptedException e) {
-//                System.err.println("Waiting interrupted while waiting for right chop stick to become available");
-//            }
-//        }
-//        chopStickRight.acquire();
-//        chopStickLeft.acquire();
-//        notify();
-//    }
-
     public void grabChopsticks() {
-        if (chopStickLeft.isAvailable()) {
+        if (!chopStickLeft.isLocked()) {
             chopStickLeft.acquire();
-            if (chopStickRight.isAvailable()) {
+            if (!chopStickRight.isLocked()) {
                 chopStickRight.acquire();
             } else {
                 chopStickRight.release();
@@ -68,16 +61,18 @@ public class Philosopher implements Runnable {
             chopStickRight.release();
             think();
         }
+        System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
     }
 
     /**
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
-        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()))
+//        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()))
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
+        eatCount++;
     }
 
     public void think() {
@@ -111,5 +106,13 @@ public class Philosopher implements Runnable {
      */
     public Thread getThread() {
         return thread;
+    }
+
+    public int getEatCount() {
+        return eatCount;
+    }
+
+    public int getChopStickRightNum() {
+        return chopStickRightNum;
     }
 }

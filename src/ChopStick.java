@@ -46,7 +46,7 @@ public class ChopStick {
      */
     public synchronized void release() {
         lock = false;
-        System.out.printf("Chopstick %d released\n", name);
+//        System.out.printf("Chopstick %d released\n", name);
         notifyAll();
     }
 
@@ -60,12 +60,11 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
-    /**
-     * This method is thread safe and is used to check the status of the ChopStick.
-     * @return true or false depending on if the lock is true or false and simulates if the ChopStick is held by
-     * a Philosopher or on the table.
-     */
-    public synchronized boolean isAvailable() {
-        return !lock;
+    public boolean isLocked() {
+        return lock;
+    }
+
+    public int getName() {
+        return name;
     }
 }
