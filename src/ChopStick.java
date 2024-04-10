@@ -1,4 +1,3 @@
-import java.util.concurrent.Semaphore;
 
 /**
  * ChopStick mutex class for the Philosophers class which are acquired in a set before use.
@@ -14,13 +13,13 @@ public class ChopStick {
     /**
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
      */
-    public ChopStick(){
+    public ChopStick() {
         lock = false;
     }
 
     public ChopStick(int name) {
-        lock = false;
         this.name = name;
+        lock = false;
     }
 
     /**
@@ -37,9 +36,7 @@ public class ChopStick {
         }
         lock = true;
         chopStickPickUpCount++;
-        System.out.println("Philosopher " + Thread.currentThread().getName() + " picked up chopstick " + name);
     }
-
 
     /**
      * The release method is a thread safe method used to change the lock boolean to false,
@@ -50,15 +47,12 @@ public class ChopStick {
      */
     public synchronized void release() {
         lock = false;
-        System.out.printf("Chopstick %d released\n", name);
-        notify();
+        notifyAll();
     }
-
 
     /**
      * The method is used to keep data to supply user with statistic on how many times the ChopStick is
      * picked up.
-     *
      * @return and int of how many times the ChopStick is picked up. It is increased everytime regardless if the
      * Philosopher eats or not.
      */
@@ -66,17 +60,17 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
-    public int getName() {
-        return name;
-    }
-
-    public synchronized boolean isAvailable() {
-        return !lock;
-    }
-
     /**
      * This method is thread safe and is used to check the status of the ChopStick.
      * @return true or false depending on if the lock is true or false and simulates if the ChopStick is held by
      * a Philosopher or on the table.
      */
+
+    public boolean isLock() {
+        return lock;
+    }
+
+    public int getName() {
+        return name;
+    }
 }

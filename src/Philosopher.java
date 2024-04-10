@@ -4,7 +4,6 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
     private int eatCount = 0;
-    private int eatPriority = 5;
 
     /**
      *
@@ -38,8 +37,8 @@ public class Philosopher implements Runnable {
     }
 
     private static void thinkDelay(String errMsg) {
-        int max = 100;
-        int min = 50;
+        int max = 500;
+        int min = 400;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -67,27 +66,23 @@ public class Philosopher implements Runnable {
      */
 
     public synchronized void grabChopSticks() {
-        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
-            try {
-                if(thread.getPriority()<8) {
-                    eatPriority+=5;
-                    thread.setPriority(eatPriority);
-                    System.out.println(thread.getPriority());
-                }
-                System.out.println(thread.getPriority());
-                wait();
-            } catch (InterruptedException e) {
-                System.err.println("Waiting interrupted while waiting for right chop stick to become available");
+        if(!chopStickRight.isLock()) {
+            chopStickRight.acquire();
+            if(!chopStickLeft.isLock()) {
+                chopStickLeft.acquire();
+            }
+            else{
+                chopStickRight.release();
+                chopStickLeft.release();
+                think();
             }
         }
-        chopStickRight.acquire();
-        chopStickLeft.acquire();
-        if(thread.getPriority()>9){
-            eatPriority-=5;
-            thread.setPriority(eatPriority);
-            System.out.println(thread.getPriority());
+        else {
+            chopStickRight.release();
+            chopStickLeft.release();
+            think();
         }
-        System.out.println(thread.getPriority());
+        System.out.println("Philosopher " + Thread.currentThread().getName() + " picked right chopstick " + chopStickRight.getName() + " and left chopstick " + chopStickLeft.getName());
     }
 
     /**
@@ -98,6 +93,7 @@ public class Philosopher implements Runnable {
         eatDelay("Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
+        System.out.println("Philosopher " + Thread.currentThread().getName() + " released right chopstick " + chopStickRight.getName() + " and left chopstick " + chopStickLeft.getName());
         System.out.println("Philosopher " + Thread.currentThread().getName() + " is done eating");
     }
 

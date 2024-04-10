@@ -46,9 +46,11 @@ public class DiningTable {
                 // For the philosopher left of the starting philosopher (the final philosopher), it's right chopstick
                 // should be the same chopstick as the first philosopher's left chopstick
                 philosophersList[i].assignChopSticks(chopsticksList[chopsticksList.length - 1], chopsticksList[i]);
-            } else if (i == (philosophersList.length - 1)) {
-                philosophersList[i].assignChopSticks(chopsticksList[i - 1], chopsticksList[chopsticksList.length - 1]);
-            } else {
+            }
+//            else if (i == (philosophersList.length - 1)) {
+//                philosophersList[i].assignChopSticks(chopsticksList[i - 1], chopsticksList[chopsticksList.length - 1]);
+//           }//
+           else {
                 philosophersList[i].assignChopSticks(chopsticksList[i - 1], chopsticksList[i]);
             }
         }
