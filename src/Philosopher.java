@@ -70,6 +70,8 @@ public class Philosopher implements Runnable {
             chopStickRight.acquire();
             if(!chopStickLeft.isLock()) {
                 chopStickLeft.acquire();
+                chopStickRight.chopStickPickUpCount();
+                chopStickLeft.chopStickPickUpCount();
             }
             else{
                 chopStickRight.release();

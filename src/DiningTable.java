@@ -42,7 +42,7 @@ public class DiningTable {
         // Create philosophers and assign chopsticks to their left and right-hand sides
         for (int i = 0; i < NUM_PHILOSOPHERS; i++) {
             philosophersList[i] = new Philosopher(String.valueOf(i));
-            if (i == (0)) {
+            if (i == 0) {
                 // For the philosopher left of the starting philosopher (the final philosopher), it's right chopstick
                 // should be the same chopstick as the first philosopher's left chopstick
                 philosophersList[i].assignChopSticks(chopsticksList[chopsticksList.length - 1], chopsticksList[i]);

@@ -35,6 +35,9 @@ public class ChopStick {
             }
         }
         lock = true;
+    }
+
+    public void chopStickPickUpCount() {
         chopStickPickUpCount++;
     }
 
