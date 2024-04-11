@@ -26,7 +26,7 @@ public class ChopStick {
      * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
      * by a Philosopher until released.
      */
-    public void acquire() {
+    public synchronized void acquire() {
         lock = true;
         chopStickPickUpCount++;
     }
@@ -38,7 +38,7 @@ public class ChopStick {
      * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
      * acquire the ChopStick in an attempt to eat with it.
      */
-    public void release() {
+    public synchronized void release() {
         lock = false;
     }
 

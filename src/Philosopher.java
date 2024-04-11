@@ -1,6 +1,4 @@
 public class Philosopher implements Runnable {
-    public static final long THINKING_TIME = 50;
-    public static final long EATING_TIME = 50;
     private Thread thread;
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
@@ -14,10 +12,13 @@ public class Philosopher implements Runnable {
         thread.start();
     }
 
-    private static void delay(long time, String errMsg) {
-        long sleepTime = Math.max(1, time);
+    private static void delay(String errMsg) {
+        int max = 200;
+        int min = 150;
+        int range = max - min + 1;
+        double sleepTime = (Math.random() * range) + min;
         try {
-            Thread.sleep(sleepTime);
+            Thread.sleep((long) sleepTime);
         } catch (InterruptedException e) {
             System.err.println(errMsg);
         }
@@ -60,7 +61,7 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
-        delay(EATING_TIME, "Thread got interrupted while sleeping");
+        delay("Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
         System.out.printf("\nPhilosopher %s released right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
@@ -68,14 +69,11 @@ public class Philosopher implements Runnable {
     }
 
     public void think() {
-        delay(THINKING_TIME, "Thinking error");
+        delay("Thinking error");
     }
 
     public void stopRunning() {
         running = false;
-        synchronized (this) {
-            notifyAll();
-        }
     }
 
     @Override
