@@ -1,10 +1,12 @@
 Dining Philosopher Group Project
 
+Authors: Ryan Johnson, Dustin Gardner
+
 Achieved Checklist:
 - Requirements
 
-1. The solution must	be uploaded	to GitHub and the location of	the
-        repository	emailed	to the professor.
+1. The solution must be uploaded to GitHub and the location of the
+        repository emailed to the professor.
 
 2. Each student will grade both themselves and their partners.
 
@@ -16,6 +18,19 @@ Achieved Checklist:
         problem	and/or group’s solution.
 
 
-
 Challenges:
 
+    Ryan and Dustin found that a few of the threads were in a wait() even know the time to eat was finished. The
+    program would not exit due to the thread in a wait status and not being able to finish their run method. Our solution to this
+    problem was adding the boolean running:
+
+    public synchronized void grabChopSticks() {
+            while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable())) {
+                try {
+                    wait();
+                    }
+           .....
+
+    By adding the running when the thread was notified, it would not get stuck in a wait() but would exit. This would
+    allow the thread to finish its run method and stop. We discovered this wait() problem with print statement for each
+    method being called it the threads run method. This allowed us to see where the thread was stuck.
