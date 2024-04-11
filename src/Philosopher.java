@@ -60,7 +60,6 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
-//        while (running && (!chopStickLeft.isAvailable() || !chopStickRight.isAvailable()))
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
