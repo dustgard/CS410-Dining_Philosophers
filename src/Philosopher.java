@@ -33,7 +33,6 @@ public class Philosopher implements Runnable {
     /**
      * Assigns which chopstick objects are at the philosopher's left and right-hand sides. Both of these chopsticks must
      * be acquired for a philosopher to eat.
-     *
      * @param chopStickRight ChopStick object placed on the philosopher's right-hand side
      * @param chopStickLeft  ChopStick object placed on the philosopher's right-hand side
      */
@@ -97,7 +96,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Returns the thread on which the philosopher is running.
-     *
      * @return Thread object on which this philosopher running
      */
     public Thread getThread() {

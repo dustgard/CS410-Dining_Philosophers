@@ -93,7 +93,6 @@ public class DiningTable {
         System.out.println("---------------------------------------------------");
         System.out.println("Displaying Stats: ");
         System.out.println("---------------------------------------------------");
-
         for (Philosopher p : philosophersList) {
             System.out.println("Philosopher: " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
             System.out.println("Right chopstick number " + p.getChopStickRight().getName());
