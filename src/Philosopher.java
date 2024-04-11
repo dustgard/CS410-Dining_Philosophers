@@ -5,7 +5,6 @@ public class Philosopher implements Runnable {
     private Thread thread;
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
-
     private int chopStickRightNum = 0;
     private int chopStickLeftNum = 0;
     private int chopStickRightCount = 0;
