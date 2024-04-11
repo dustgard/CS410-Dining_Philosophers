@@ -59,8 +59,8 @@ public class ChopStick {
         return chopStickPickUpCount;
     }
 
-    public boolean isLock() {
-        return !lock;
+    public boolean isLocked() {
+        return lock;
     }
 
     public int getName() {

@@ -39,9 +39,10 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public void grabChopsticks() {
-        if (chopStickLeft.isLock()) {
+        if (!chopStickLeft.isLocked()) {
             chopStickLeft.acquire();
-            if (chopStickRight.isLock()) {
+            if (!chopStickRight.isLocked()) {
+                System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
                 chopStickRight.acquire();
             } else {
                 chopStickRight.release();
@@ -53,7 +54,6 @@ public class Philosopher implements Runnable {
             chopStickRight.release();
             think();
         }
-        System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
     }
 
     /**
@@ -64,6 +64,7 @@ public class Philosopher implements Runnable {
         delay(EATING_TIME, "Thread got interrupted while sleeping");
         chopStickRight.release();
         chopStickLeft.release();
+        System.out.printf("\nPhilosopher %s released right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
         eatCount++;
     }
 
