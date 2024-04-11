@@ -13,8 +13,8 @@ public class Philosopher implements Runnable {
     }
 
     private static void delay(String errMsg) {
-        int max = 250;
-        int min = 150;
+        int max = 20;
+        int min = 20;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -49,11 +49,12 @@ public class Philosopher implements Runnable {
                 chopStickLeft.setChopStickPickUpCount();
                 return true;
             } else {
+                System.out.printf("\nPhilosopher %s released left chopstick %s to avoid deadlock-------------------------\n", Thread.currentThread().getName(), chopStickLeft.getName());
                 chopStickLeft.release();
                 return false;
             }
         } else {
-            chopStickRight.release();
+            System.out.printf("\nPhilosopher %s released right chopstick %s to avoid deadlock----------------------------\n", Thread.currentThread().getName(), chopStickRight.getName());
             return false;
         }
     }

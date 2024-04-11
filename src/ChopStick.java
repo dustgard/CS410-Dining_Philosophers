@@ -5,7 +5,7 @@
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class ChopStick {
-    private boolean lock;
+    private volatile boolean lock;
     private int name;
     private int chopStickPickUpCount = 0;
 
@@ -26,7 +26,7 @@ public class ChopStick {
      * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
      * by a Philosopher until released.
      */
-    public synchronized void acquire() {
+    public void acquire() {
         lock = true;
     }
 
