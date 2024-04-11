@@ -39,21 +39,21 @@ public class Philosopher implements Runnable {
      * Grabs both the left and right chopsticks once they are both available. Until both chopsticks are available, the
      * philosopher thread waits to eat.
      */
-    public void grabChopsticks() {
+    public boolean grabChopsticks() {
         if (!chopStickLeft.isLocked()) {
             chopStickLeft.acquire();
             if (!chopStickRight.isLocked()) {
-                System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
                 chopStickRight.acquire();
+                System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
+                chopStickRight.setChopStickPickUpCount();
+                chopStickLeft.setChopStickPickUpCount();
+                return true;
             } else {
-                chopStickRight.release();
-                chopStickRight.release();
-                think();
+                chopStickLeft.release();
+                return false;
             }
         } else {
-            chopStickLeft.release();
-            chopStickRight.release();
-            think();
+            return false;
         }
     }
 
@@ -62,9 +62,9 @@ public class Philosopher implements Runnable {
      */
     public void eatRice() {
         delay("Thread got interrupted while sleeping");
+        System.out.printf("\nPhilosopher %s released right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
         chopStickRight.release();
         chopStickLeft.release();
-        System.out.printf("\nPhilosopher %s released right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
         eatCount++;
     }
 
@@ -80,8 +80,9 @@ public class Philosopher implements Runnable {
     public void run() {
         while (running) {
             think();
-            grabChopsticks();
-            eatRice();
+            if(grabChopsticks()){
+                eatRice();
+            }
         }
     }
 

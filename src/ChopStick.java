@@ -28,7 +28,6 @@ public class ChopStick {
      */
     public synchronized void acquire() {
         lock = true;
-        chopStickPickUpCount++;
     }
 
     /**
@@ -38,7 +37,7 @@ public class ChopStick {
      * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
      * acquire the ChopStick in an attempt to eat with it.
      */
-    public synchronized void release() {
+    public void release() {
         lock = false;
     }
 
@@ -50,6 +49,10 @@ public class ChopStick {
      */
     public int getChopStickPickUpCount() {
         return chopStickPickUpCount;
+    }
+
+    public void setChopStickPickUpCount() {
+        this.chopStickPickUpCount++;
     }
 
     public boolean isLocked() {
