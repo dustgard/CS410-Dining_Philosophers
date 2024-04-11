@@ -60,7 +60,7 @@ public class ChopStick {
     }
 
     public boolean isLock() {
-        return lock;
+        return !lock;
     }
 
     public int getName() {

@@ -1,21 +1,15 @@
 public class Philosopher implements Runnable {
     public static final long THINKING_TIME = 50;
     public static final long EATING_TIME = 50;
-    private String name;
     private Thread thread;
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
-    private int chopStickRightNum = 0;
-    private int chopStickLeftNum = 0;
-    private int chopStickRightCount = 0;
-    private int chopStickLeftCount = 0;
     private int eatCount = 0;
 
     public Philosopher() {
     }
 
     public Philosopher(String name) {
-        this.name = name;
         thread = new Thread(this, name);
         thread.start();
     }
@@ -45,9 +39,9 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public void grabChopsticks() {
-        if (!chopStickLeft.isLock()) {
+        if (chopStickLeft.isLock()) {
             chopStickLeft.acquire();
-            if (!chopStickRight.isLock()) {
+            if (chopStickRight.isLock()) {
                 chopStickRight.acquire();
             } else {
                 chopStickRight.release();
@@ -111,21 +105,5 @@ public class Philosopher implements Runnable {
 
     public ChopStick getChopStickRight() {
         return chopStickRight;
-    }
-
-    public int getChopStickRightNum() {
-        return chopStickRightNum;
-    }
-
-    public int getChopStickLeftNum() {
-        return chopStickLeftNum;
-    }
-
-    public int getChopStickRightCount() {
-        return chopStickRightCount;
-    }
-
-    public int getChopStickLeftCount() {
-        return chopStickLeftCount;
     }
 }
