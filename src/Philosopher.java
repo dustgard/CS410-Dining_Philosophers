@@ -53,6 +53,7 @@ public class Philosopher implements Runnable {
                 return false;
             }
         } else {
+            chopStickRight.release();
             return false;
         }
     }
