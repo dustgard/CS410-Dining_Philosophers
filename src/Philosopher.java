@@ -13,7 +13,7 @@ public class Philosopher implements Runnable {
     }
 
     private static void delay(String errMsg) {
-        int max = 200;
+        int max = 250;
         int min = 150;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
