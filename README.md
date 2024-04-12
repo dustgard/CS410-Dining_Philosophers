@@ -2,9 +2,9 @@
 
 Authors: Ryan Johnson, Dustin Gardner
 
-    The	dining-philosophers	problem	is considered a classic	synchronization	problem	
+    The dining-philosophers	problem	is considered a classic	synchronization	problem	
     because it is an example of a large class of concurrency-control	
-    problems. It is	a simple representation	of the need	to allocate	several	resources	
+    problems. It is	a simple representation	of the need to allocate	several	resources	
     among several processes	in a deadlock-free and starvation-free manner.	
 
 Lab Tasks:
