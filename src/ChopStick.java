@@ -8,6 +8,7 @@ public class ChopStick {
     private volatile boolean lock;
     private int name;
     private int chopStickPickUpCount = 0;
+    private String chopStickOwner = "";
 
     /**
      * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
@@ -26,8 +27,15 @@ public class ChopStick {
      * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
      * by a Philosopher until released.
      */
-    public void acquire() {
+    public synchronized void acquire() {
+        while (lock) {
+            try {
+                wait();
+            } catch (InterruptedException ignored) {
+            }
+        }
         lock = true;
+        chopStickOwner = Thread.currentThread().getName();
     }
 
     /**
@@ -37,8 +45,11 @@ public class ChopStick {
      * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
      * acquire the ChopStick in an attempt to eat with it.
      */
-    public void release() {
-        lock = false;
+    public synchronized void release() {
+        if (chopStickOwner.equals(Thread.currentThread().getName())) {
+            lock = false;
+            notifyAll();
+        }
     }
 
     /**

@@ -16,6 +16,7 @@ public class DiningTable {
     private final Philosopher[] philosophersList = new Philosopher[NUM_PHILOSOPHERS];
     private final LocalTime stoppingTime = LocalTime.now().plusSeconds(SECONDS_TO_EAT);
     private boolean running = false;
+    private int deadLockCounter = 0;
 
     /**
      * Initializes a dining table by creating each of the philosophers at the table.
@@ -95,10 +96,13 @@ public class DiningTable {
         System.out.println("---------------------------------------------------");
         for (Philosopher p : philosophersList) {
             System.out.println("Philosopher: " + p.getThread().getName() + " was able to eat " + p.getEatCount() + " times");
-            System.out.println("Right chopstick number " + p.getChopStickRight().getName());
-            System.out.println("Left chopstick number " + p.getChopStickLeft().getName());
+            System.out.println("Right chopstick: " + p.getChopStickRight().getName());
+            System.out.println("Left chopstick: " + p.getChopStickLeft().getName());
             System.out.println("----------------------------------------------------");
+            deadLockCounter += p.getPossibleDeadLocks();
         }
+        System.out.println("Possible dead locks avoided: " + deadLockCounter);
+        System.out.println("----------------------------------------------------");
         for (ChopStick chopStick : chopsticksList) {
             System.out.println("Chopstick " + chopStick.getName() + " was picked up " + chopStick.getChopStickPickUpCount() + " times.");
         }

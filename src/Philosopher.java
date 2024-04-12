@@ -3,6 +3,7 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
     private int eatCount = 0;
+    private int possibleDeadLocks = 0;
 
     public Philosopher() {
     }
@@ -13,8 +14,8 @@ public class Philosopher implements Runnable {
     }
 
     private static void delay(String errMsg) {
-        int max = 20;
-        int min = 20;
+        int max = 250;
+        int min = 150;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -40,7 +41,7 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public boolean grabChopsticks() {
-        if (!chopStickLeft.isLocked()) {
+        if (!chopStickLeft.isLocked()||!chopStickRight.isLocked()) {
             chopStickLeft.acquire();
             if (!chopStickRight.isLocked()) {
                 chopStickRight.acquire();
@@ -50,11 +51,11 @@ public class Philosopher implements Runnable {
                 return true;
             } else {
                 System.out.printf("\nPhilosopher %s released left chopstick %s to avoid deadlock-------------------------\n", Thread.currentThread().getName(), chopStickLeft.getName());
+                possibleDeadLocks++;
                 chopStickLeft.release();
                 return false;
             }
         } else {
-            System.out.printf("\nPhilosopher %s released right chopstick %s to avoid deadlock----------------------------\n", Thread.currentThread().getName(), chopStickRight.getName());
             return false;
         }
     }
@@ -106,5 +107,9 @@ public class Philosopher implements Runnable {
 
     public ChopStick getChopStickRight() {
         return chopStickRight;
+    }
+
+    public int getPossibleDeadLocks() {
+        return possibleDeadLocks;
     }
 }
