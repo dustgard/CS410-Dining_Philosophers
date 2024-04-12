@@ -55,6 +55,7 @@ public class ChopStick {
     /**
      * The method is used to keep data to supply user with statistic on how many times the ChopStick is
      * picked up.
+     *
      * @return and int of how many times the ChopStick is picked up. It is increased everytime regardless if the
      * Philosopher eats or not.
      */
