@@ -28,12 +28,6 @@ public class ChopStick {
      * by a Philosopher until released.
      */
     public synchronized void acquire() {
-        while (lock) {
-            try {
-                wait();
-            } catch (InterruptedException ignored) {
-            }
-        }
         lock = true;
         chopStickOwner = Thread.currentThread().getName();
     }
@@ -48,7 +42,6 @@ public class ChopStick {
     public synchronized void release() {
         if (chopStickOwner.equals(Thread.currentThread().getName())) {
             lock = false;
-            notifyAll();
         }
     }
 

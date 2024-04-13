@@ -3,7 +3,8 @@ public class Philosopher implements Runnable {
     private volatile boolean running = true;
     private ChopStick chopStickRight, chopStickLeft;
     private int eatCount = 0;
-    private int possibleDeadLocks = 0;
+    private float totalEatTime = 0;
+    private float totalThinkTime = 0;
 
     public Philosopher() {
     }
@@ -13,9 +14,9 @@ public class Philosopher implements Runnable {
         thread.start();
     }
 
-    private static void delay(String errMsg) {
-        int max = 250;
-        int min = 150;
+    private float delay(String errMsg) {
+        int max = 200;
+        int min = 20;
         int range = max - min + 1;
         double sleepTime = (Math.random() * range) + min;
         try {
@@ -23,6 +24,7 @@ public class Philosopher implements Runnable {
         } catch (InterruptedException e) {
             System.err.println(errMsg);
         }
+        return (float) sleepTime;
     }
 
     /**
@@ -42,17 +44,14 @@ public class Philosopher implements Runnable {
      * philosopher thread waits to eat.
      */
     public boolean grabChopsticks() {
-        if (!chopStickLeft.isLocked() || !chopStickRight.isLocked()) {
+        if (!chopStickLeft.isLocked() && !chopStickRight.isLocked()) {
             chopStickLeft.acquire();
             if (!chopStickRight.isLocked()) {
                 chopStickRight.acquire();
-                System.out.printf("\nPhilosopher %s picked right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
                 chopStickRight.setChopStickPickUpCount();
                 chopStickLeft.setChopStickPickUpCount();
                 return true;
             } else {
-                System.out.printf("\nPhilosopher %s released left chopstick %s to avoid deadlock-------------------------\n", Thread.currentThread().getName(), chopStickLeft.getName());
-                possibleDeadLocks++;
                 chopStickLeft.release();
                 return false;
             }
@@ -65,15 +64,16 @@ public class Philosopher implements Runnable {
      * Pauses the thread for 500 ms to simulate a philosopher in the "eating" process.
      */
     public void eatRice() {
-        delay("Thread got interrupted while sleeping");
-        System.out.printf("\nPhilosopher %s released right chopstick %s and left chopstick %s\n", Thread.currentThread().getName(), chopStickRight.getName(), chopStickLeft.getName());
+        float eatTime = delay("Thread got interrupted while eating");
+        totalEatTime += eatTime;
         chopStickRight.release();
         chopStickLeft.release();
         eatCount++;
     }
 
     public void think() {
-        delay("Thinking error");
+        float thinkTime = delay("Thinking error");
+        totalThinkTime += thinkTime;
     }
 
     public void stopRunning() {
@@ -111,7 +111,11 @@ public class Philosopher implements Runnable {
         return chopStickRight;
     }
 
-    public int getPossibleDeadLocks() {
-        return possibleDeadLocks;
+    public float getTotalEatTime() {
+        return totalEatTime;
+    }
+
+    public float getTotalThinkTime() {
+        return totalThinkTime;
     }
 }
