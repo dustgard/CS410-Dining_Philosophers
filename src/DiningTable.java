@@ -1,14 +1,14 @@
 import java.time.LocalTime;
 
 /**
- * Serves as the controller class for the DiningPhilosophers program. A dining table stores each of the philosophers and
+ * Serves as the controller class for the Dining Philosophers program. A dining table stores each of the philosophers and
  * their designated chopsticks, starts/stops the eating/thinking process, and displays the stats after the program has
- * finished.
+ * finished. Note that the number of philosophers may be changed away from the traditional 5 philosophers. However, the
+ * number of philosophers must be greater than 3 in order for the program to function correctly.
  * <p>
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class DiningTable {
-
     private final int NUM_PHILOSOPHERS = 5;
     private final int NUM_CHOPSTICKS = NUM_PHILOSOPHERS;
     private final ChopStick[] chopsticksList = new ChopStick[NUM_CHOPSTICKS];
@@ -26,14 +26,15 @@ public class DiningTable {
 
     public static void main(String[] args) {
         System.out.println("Philosophers eating...");
+
         DiningTable table = new DiningTable();
         table.eat();
         table.displayStats();
     }
 
     /**
-     * Creates the specified number of philosophers to eat/think at the table. Each of these philosophers, stored in an
-     * array, runs on a separate thread.
+     * Creates the specified number of philosophers to eat/think at the table and then assigned the left and right chopstick
+     * to each of these philosophers. Each philosopher, stored in an array, runs on a separate thread.
      */
     public void createPhilosophers() {
         // Create chopsticks
@@ -52,8 +53,8 @@ public class DiningTable {
     }
 
     /**
-     * Allows the philosophers to start eating/thinking for the specified time period. The threads are stopped after this
-     * designated time period.
+     * Allows the philosophers to start the eating/thinking process for the specified time period. The threads are
+     * stopped after this designated time period.
      */
     public void eat() {
         startEating();
@@ -73,7 +74,7 @@ public class DiningTable {
     }
 
     /**
-     * Signals each of the philosopher threads to stop and waits for them to end.
+     * Signals each of the philosopher threads to stop and then waits for them to end.
      */
     public void stopEating() {
         running = false;
@@ -90,6 +91,10 @@ public class DiningTable {
         }
     }
 
+    /**
+     * Displays statistics after all philosopher threads have finished. This includes specifying the number of times
+     * that each philosopher got to eat and how much time was spent eating vs. thinking.
+     */
     public void displayStats() {
         System.out.println("---------------------------------------------------");
         System.out.println("Displaying Stats: ");

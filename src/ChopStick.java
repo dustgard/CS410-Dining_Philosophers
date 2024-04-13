@@ -1,69 +1,84 @@
 /**
- * ChopStick mutex class for the Philosophers class which are acquired in a set before use.
- * The chopsticks are used to simulated eating utensils for each of the philosophers.The class, which is based off of
- * a simple mutex, ensures that there is only one thread at a time that can access the methods.
+ * Class for representing the chopsticks required for a philosopher to eat. Two chopsticks are assigned to each philosopher,
+ * one on the left and another on the right of their person. In order to eat, the philosopher must gain access to both
+ * of these chopsticks, which may only be used by a single philosopher thread at a time.
+ * <p>
  * Author: Ryan Johnson, Dustin Gardner
  */
 public class ChopStick {
+    private final int name;
     private volatile boolean lock;
-    private int name;
-    private int chopStickPickUpCount = 0;
-    private String chopStickOwner = "";
+    private int chopStickPickUpCount;
+    private String chopStickOwner;
 
     /**
-     * Initializes the ChopStick and setting boolean lock to false allowing the first thread to access the methods.
+     * Initializes the chopstick, ensuring the chopstick is unlocked and setting the name of the chopstick.
      */
-    public ChopStick() {
-        lock = false;
-    }
-
     public ChopStick(int name) {
+        this.lock = false;
         this.name = name;
-        lock = false;
+        this.chopStickPickUpCount = 0;
+        this.chopStickOwner = "";
     }
 
     /**
-     * The acquire method is a thread safe method used to change the lock boolean to true effectively causing any other
-     * thread trying to acquire as well to enter a wait() state. This simulates that the Chopstick is being held
-     * by a Philosopher until released.
+     * Changes the lock boolean to true to simulate a philosopher picking up the chopstick. This boolean will be changed
+     * back to false once the philosopher has finished eating.
      */
     public synchronized void acquire() {
+        if (lock) {
+            System.err.printf("Attempt to acquire Chopstick %s, which is already held by a philosopher", name);
+        }
         lock = true;
         chopStickOwner = Thread.currentThread().getName();
     }
 
     /**
-     * The release method is a thread safe method used to change the lock boolean to false,
-     * effectively causing any other thread trying to acquire as well to enter a wait() state.
-     * This simulates that the Chopstick is being put back down on the table and allowing another
-     * Philosopher to pick it up.Once the ChopStick is released, it wakes up the other thread waiting to
-     * acquire the ChopStick in an attempt to eat with it.
+     * The release method is used to change the lock boolean to false. This simulates the chopstick being put back down
+     * on the table, which allows another philosopher to pick it up.
      */
     public synchronized void release() {
-        if (chopStickOwner.equals(Thread.currentThread().getName())) {
-            lock = false;
+        if (!chopStickOwner.equals(Thread.currentThread().getName())) {
+            System.err.printf("Philosopher attempted to release chopstick they don't possess (Chopstick %s)", name);
         }
+        if (!lock) {
+            System.err.printf("Attempt to release a free chopstick lock (Chopstick %s)", name);
+        }
+        lock = false;
     }
 
     /**
-     * The method is used to keep data to supply user with statistic on how many times the ChopStick is
-     * picked up.
+     * Returns the number of times the chopstick has been picked up.
      *
-     * @return and int of how many times the ChopStick is picked up. It is increased everytime regardless if the
-     * Philosopher eats or not.
+     * @return int detailing how many times the chopstick is picked up.
      */
     public int getChopStickPickUpCount() {
         return chopStickPickUpCount;
     }
 
+    /**
+     * Increments the number of times the chopstick has been picked up. It is increased every time the chopstick is acquired,
+     * regardless of whether the philosopher eats or not.
+     */
     public void setChopStickPickUpCount() {
         this.chopStickPickUpCount++;
     }
 
+    /**
+     * Returns the current status of the boolean lock for the chopstick. The lock is true if the chopstick is currently
+     * held by a philosopher and false if on the table.
+     *
+     * @return boolean describing whether the chopstick is currently held by a philosopher
+     */
     public boolean isLocked() {
         return lock;
     }
 
+    /**
+     * Returns the number of the chopstick, used for identification purposes. Each chopstick is assigned a unique name.
+     *
+     * @return int representing the name of the chopstick, distinguishing it from other chopsticks
+     */
     public int getName() {
         return name;
     }
