@@ -34,3 +34,11 @@ Challenges:
     By adding the running when the thread was notified, it would not get stuck in a wait() but would exit. This would
     allow the thread to finish its run method and stop. We discovered this wait() problem with print statement for each
     method being called it the threads run method. This allowed us to see where the thread was stuck.
+
+    - same phil acquiring same chopstick
+    - semphore failed
+    - mutex in chopstick not necessary (busy loop in philosopher)
+    - deadlock: each grabbing left chopstick
+    - starvation: first to wait would starve
+    - not thinking after failed chop grab (seemed like they were eating, but they weren't)
+    - chopstick assignment
