@@ -26,7 +26,6 @@ public class DiningTable {
 
     public static void main(String[] args) {
         System.out.println("Philosophers eating...");
-
         DiningTable table = new DiningTable();
         table.eat();
         table.displayStats();

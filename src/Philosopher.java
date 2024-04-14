@@ -18,7 +18,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Initializes the philosopher, creating and starting a new thread for the philosopher to run on.
-     *
      * @param name String containing the name assigned to the new philosopher thread
      */
     public Philosopher(String name) {
@@ -27,7 +26,6 @@ public class Philosopher implements Runnable {
         this.eatCount = 0;
         this.totalEatTime = 0;
         this.totalThinkTime = 0;
-
         thread.start();
     }
 
@@ -35,7 +33,6 @@ public class Philosopher implements Runnable {
      * Makes the philosopher thread sleep for a randomly selected amount of time between 20-200 ms. This is used to
      * simulate the time it takes for a philosopher to think and eat. Each time a philosopher thinks or eats, a random
      * time is assigned to the process.
-     *
      * @param errMsg String containing the message displayed if there is an error while the thread is sleeping
      * @return float specifying the number of milliseconds the thread sleeps for
      */
@@ -55,7 +52,6 @@ public class Philosopher implements Runnable {
     /**
      * Assigns which chopstick objects are at the philosopher's left and right-hand sides. Both of these chopsticks must
      * be acquired for a philosopher to eat.
-     *
      * @param chopStickRight ChopStick object placed on the philosopher's right-hand side
      * @param chopStickLeft  ChopStick object placed on the philosopher's left-hand side
      */
@@ -128,7 +124,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Returns the thread on which the philosopher is running.
-     *
      * @return Thread object on which this philosopher running
      */
     public Thread getThread() {
@@ -137,7 +132,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Returns the number of times the philosopher has been allowed to eat.
-     *
      * @return int specifying the number of times the philosopher has been allowed to eat
      */
     public int getEatCount() {
@@ -146,7 +140,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Returns the chopstick on the philosopher's left-hand side.
-     *
      * @return ChopStick object on the philosopher's left-hand side
      */
     public ChopStick getChopStickLeft() {
@@ -155,7 +148,6 @@ public class Philosopher implements Runnable {
 
     /**
      * Returns the chopstick on the philosopher's right-hand side.
-     *
      * @return ChopStick object on the philosopher's right-hand side
      */
     public ChopStick getChopStickRight() {
@@ -165,7 +157,6 @@ public class Philosopher implements Runnable {
     /**
      * Returns the total number of milliseconds the philosopher has been in the "eating" process. This is used when
      * displaying statistics after all philosopher threads have stopped running.
-     *
      * @return float specifying the total number of milliseconds the philosopher has been in the "eating" process
      */
     public float getTotalEatTime() {
@@ -175,7 +166,6 @@ public class Philosopher implements Runnable {
     /**
      * Returns the total number of milliseconds the philosopher has been in the "thinking" process. This is used when
      * displaying statistics after all philosopher threads have stopped running.
-     *
      * @return float specifying the total number of milliseconds the philosopher has been in the "eating" process
      */
     public float getTotalThinkTime() {

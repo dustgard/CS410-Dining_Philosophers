@@ -49,7 +49,6 @@ public class ChopStick {
 
     /**
      * Returns the number of times the chopstick has been picked up.
-     *
      * @return int detailing how many times the chopstick is picked up.
      */
     public int getChopStickPickUpCount() {
@@ -67,7 +66,6 @@ public class ChopStick {
     /**
      * Returns the current status of the boolean lock for the chopstick. The lock is true if the chopstick is currently
      * held by a philosopher and false if on the table.
-     *
      * @return boolean describing whether the chopstick is currently held by a philosopher
      */
     public boolean isLocked() {
@@ -76,7 +74,6 @@ public class ChopStick {
 
     /**
      * Returns the number of the chopstick, used for identification purposes. Each chopstick is assigned a unique name.
-     *
      * @return int representing the name of the chopstick, distinguishing it from other chopsticks
      */
     public int getName() {

@@ -13,7 +13,7 @@ Authors: Ryan Johnson, Dustin Gardner
     right to become available, resulting in a deadlock where no philosopher can eat.
 
 Rules needed to succeed:
-       
+
         1. Mutual Exclusion: Ensure that resources are accessed exclusively by only one process at a time. 
                 This prevents multiple processes from accessing the same resource simultaneously.
 
