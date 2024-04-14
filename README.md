@@ -12,7 +12,7 @@ Authors: Ryan Johnson, Dustin Gardner
     simultaneously pick up the fork to their left, for instance, they will all wait indefinitely for the fork to their 
     right to become available, resulting in a deadlock where no philosopher can eat.
 
-Rules needed:
+Rules needed to succeed:
        
         1. Mutual Exclusion: Ensure that resources are accessed exclusively by only one process at a time. 
                 This prevents multiple processes from accessing the same resource simultaneously.
@@ -53,6 +53,7 @@ Lab Tasks:
                     - Chopstick right and left numbers assigned.
                     - Total thinking time and percent of time thinking compared to total dinning time allowed.
                     - Total eating time and percent of time eating compared to total dinning time allowed.
+                - Chopstick number and how many times it was picked up successfully.
 
 Dining Philosophers program design explanation:
 
