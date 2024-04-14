@@ -25,20 +25,27 @@ Bell Choir program design explanation:
 
 	Dinnig Table class:
 
-        Serves as the controller class for the DiningPhilosophers program. A dining table stores each of the philosophers and
+        Serves as the controller class for the Dining Philosophers program. A dining table stores each of the philosophers and
         their designated chopsticks, starts/stops the eating/thinking process, and displays the stats after the program has
-        finished.
+        finished. Note that the number of philosophers may be changed away from the traditional 5 philosophers. However, the
+        number of philosophers must be greater than 3 in order for the program to function correctly.
 
 
     Philosopher class:
 
+        Class for representing a philosopher in the Dining Philosophers Solution. Each philosopher is run on a separate thread,
+        which is started immediately upon the philosopher's initialization. Each philosopher is assigned both a left and right
+        chopstick, both of which must be acquired in order for the philosopher to eat. The philosopher starts by thinking for
+        a randomly chosen amount of time, simulated by having the thread sleep for the designated amount of time. Once the
+        philosopher has finished thinking, it attempts to pick up both chopsticks to eat. If either is unavailable, any acquired
+        chopstick is released before the philosopher returns to a thinking state before attempting to eat again.
 
 
 	ChopStick class:
 
-        ChopStick mutex class for the Philosophers class which are acquired in a set before use.
-        The chopsticks are used to simulated eating utensils for each of the philosophers.The class, which is based off of
-        a simple mutex, ensures that there is only one thread at a time that can access the methods.
+        Class for representing the chopsticks required for a philosopher to eat. Two chopsticks are assigned to each philosopher,
+        one on the left and another on the right of their person. In order to eat, the philosopher must gain access to both
+        of these chopsticks, which may only be used by a single philosopher thread at a time.
 
 Setting up:
 
@@ -49,7 +56,7 @@ Setting up:
     Clone repository:
         git clone https://github.com/dustgard/CS410-Dining_Philosophers.git
 
-Starting the Bell Choir application Command Prompt using Apache Ant:
+Starting the Dinning_Philosophers application Command Prompt using Apache Ant:
 
     To start the application, a command prompt needs to be open in the directory
     for the program that was cloned.
@@ -58,11 +65,8 @@ Starting the Bell Choir application Command Prompt using Apache Ant:
             Windows: command: ant --version
         2. Command: to build a project using ant:
             macOS and Windows: ant
-        3. Command: to run java program with the default song "Mary Had a Little Lamb"
+        3. Command: To run
             macOS and Windows: ant run
-        4. Command: to run java program with ant parameter using a custom song.
-            macOS and Windows: ant -Dsong="[enter song location here]" run
-            example ant -Dsong="C:\Users\dust\Drive\MaryLamb.txt" run
 
 Installing Apache Ant:
 
