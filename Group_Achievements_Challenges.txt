@@ -31,8 +31,8 @@ Achieved Checklist:
 Challenges:
 
         The group found that a few of the threads were in a wait() even though the time to eat was finished.
-        The program would not exist because the thread was in a wait status and unable to finish its run method.
-        Our solution to this problem was adding the boolean running. This also allowed some philosophers
+        The program would not exit because the thread was in a wait status and unable to finish its run method.
+        Our solution to this problem was adding a 'running' boolean. This also allowed some philosophers
         to starve. Our group realized that having to wait() and notify() in the chopstick class was unnecessary.
         It was extra code that we removed because even if the waiting thread was notified, the thread, after thinking,
         would not pass the check for availability using the grabchopstick method and would release the chopstick anyway.
@@ -46,7 +46,7 @@ Challenges:
 
         We ran into a deadlock when all the philosophers grabbed the left chopstick simultaneously, not allowing any of
         them to grab the right chopstick. We solved this by adding a check when picking up the right chopstick. If the
-        right chopstick were unavailable, the philosopher would release the left one if they acquired it.
+        right chopstick was unavailable, the philosopher would release the left one if it had been acquired.
 
 
         We also had issues with what to do when the philosopher could not acquire both chopsticks due to putting
